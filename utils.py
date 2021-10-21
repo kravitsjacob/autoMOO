@@ -35,6 +35,7 @@ def create_dashboard(group_labels_with_columns, group_values):
 
     @app.callback(
         Output('parallel', 'srcDoc'),
+        Output('memory', 'data'),
         Input('update_button', 'n_clicks'),
         State('cor_threshold', 'value'),
         State('memory', 'data')
@@ -58,6 +59,10 @@ def create_dashboard(group_labels_with_columns, group_values):
             exp.display_data(hip.Displays.PARALLEL_PLOT).update({'hide': ['uid']})
             exp.display_data(hip.Displays.TABLE).update({'hide': ['uid', 'from_uid']})
             srcdoc = exp.to_html()  # Store html as string
-        return srcdoc
+
+            # Pack in memory data
+            memory_data['group_labels_with_columns'] = new_group_labels_with_columns
+            memory_data['group_values'] = new_group_values
+        return srcdoc, memory_data
 
     return app
