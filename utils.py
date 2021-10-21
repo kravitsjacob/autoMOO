@@ -1,3 +1,5 @@
+import numpy as np
+import pandas as pd
 import dash
 from dash import html
 from dash import dcc
@@ -40,7 +42,7 @@ def create_dashboard(group_labels_with_columns, group_values):
     def update_parallel(n_clicks, cor_threshold, memory_data):
         # Unpack memory data
         old_group_labels_with_columns = memory_data['group_labels_with_columns']
-        old_group_values = memory_data['group_values']
+        old_group_values = np.array(memory_data['group_values'])
 
         if n_clicks == 0:
             srcdoc = ''
@@ -51,8 +53,8 @@ def create_dashboard(group_labels_with_columns, group_values):
             )
 
             # Create parallel plot
-            exp = hip.Experiment.from_iterable()
-
+            df = pd.DataFrame(new_group_values, columns=new_group_labels_with_columns.keys())
+            exp = hip.Experiment.from_dataframe(df)
             exp.display_data(hip.Displays.PARALLEL_PLOT).update({'hide': ['uid']})
             exp.display_data(hip.Displays.TABLE).update({'hide': ['uid', 'from_uid']})
             srcdoc = exp.to_html()  # Store html as string
