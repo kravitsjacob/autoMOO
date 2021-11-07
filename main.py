@@ -20,7 +20,7 @@ def main():
         cor_matrix
     )
 
-    # Run Dashboard
+    # Run dashboard
     app.run_server(debug=True)
 
     return 0
