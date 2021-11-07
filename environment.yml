@@ -7,4 +7,5 @@ dependencies:
   - dash
   - hiplot
   - pandas
+  - pycodestyle
 prefix: C:\Users\kravi\.conda\envs\autoMOO
