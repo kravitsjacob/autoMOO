@@ -10,12 +10,13 @@ from dash.dependencies import Input, Output, State
 import hiplot as hip
 
 
-def group_columns(group_labels_with_columns, group_values, cor_threshold):
+def group_columns(group_labels_with_columns, group_values, cor_threshold, cor_matrix):
     # TODO Create grouping algorithm
+    a = 1
     return group_labels_with_columns, group_values
 
 
-def create_dashboard(group_labels_with_columns, group_values):
+def create_dashboard(group_labels_with_columns, group_values, cor_matrix):
     """
     Create dash app
 
@@ -26,6 +27,8 @@ def create_dashboard(group_labels_with_columns, group_values):
         column lables
     group_values: ndarray
         Numpy array with each column being the values for each group
+    cor_matrix: ndarray
+        Numpy arrary of column correlations
 
     Returns
     -------
@@ -60,7 +63,9 @@ def create_dashboard(group_labels_with_columns, group_values):
                 id='memory',
                 data={
                     'group_labels_with_columns': group_labels_with_columns,
-                    'group_values': group_values}
+                    'group_values': group_values,
+                    'cor_matrix': cor_matrix
+                }
             )
         ]
     )
@@ -81,7 +86,7 @@ def create_dashboard(group_labels_with_columns, group_values):
         n_clicks: int
             Number of times button pressed
         cor_threshold: float
-            Current corelation threshold selected by the user
+            Current correlation threshold selected by the user
         memory_data: dict
             Data stored in memory
 
@@ -97,13 +102,17 @@ def create_dashboard(group_labels_with_columns, group_values):
         old_group_labels_with_columns = \
             memory_data['group_labels_with_columns']
         old_group_values = np.array(memory_data['group_values'])
+        cor_matrix = np.array(memory_data['cor_matrix'])
 
         if n_clicks == 0:
             srcdoc = ''
         else:
             # TODO Create column grouping algorithm
             new_group_labels_with_columns, new_group_values = group_columns(
-                old_group_labels_with_columns, old_group_values, cor_threshold
+                old_group_labels_with_columns,
+                old_group_values,
+                cor_threshold,
+                cor_matrix
             )
 
             # Create parallel plot
