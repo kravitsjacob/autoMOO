@@ -10,9 +10,34 @@ from dash.dependencies import Input, Output, State
 import hiplot as hip
 
 
-def group_columns(group_labels_with_columns, group_values, cor_threshold, cor_matrix):
-    # TODO Create grouping algorithm
-    a = 1
+def group_columns(
+        group_labels_with_columns,
+        group_values,
+        cor_threshold,
+        cor_matrix
+):
+    """
+    Grouping columns
+
+    Parameters
+    ----------
+    group_labels_with_columns: dict
+        Dictionary with keys of group labels and values of corresponding
+        column lables
+    group_values: ndarray
+        Numpy array with each column being the values for each group
+    cor_threshold: float
+            Current correlation threshold selected by the user
+    cor_matrix: ndarray
+        Numpy arrary of column correlations
+
+    Returns
+    -------
+    group_labels_with_columns: dict
+        Updated `group_labels_with_columns` based on `cor_threshold`
+    group_values: ndarray
+        Updated `group_values` based on `cor_threshold`
+    """
     return group_labels_with_columns, group_values
 
 
