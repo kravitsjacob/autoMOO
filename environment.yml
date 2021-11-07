@@ -1,0 +1,11 @@
+name: autoMOO
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - dash
+  - hiplot
+  - pandas
+  - pycodestyle
+prefix: C:\Users\kravi\.conda\envs\autoMOO
