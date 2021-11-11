@@ -1,13 +1,23 @@
-"""Example Run Script for AutoMOO"""
+"""Example Run Script for autoMOO"""
 
 import pandas as pd
 import utils
 
 
+
 def main():
-    # TODO create true input function
-    df = pd.read_csv('example_datasets/machine_learning_dam_hazard.csv')
+    '''
+    This is the main function which run all other functions
+    '''
+    # pulling in arguments through input parser
+    args = utils.input_parser()
+    #pulling information from config file
+    data_file, prefs = utils.config_parser(args)
+    #reading data csv
+    df = pd.read_csv(data_file)
+    # creating correlation matrix
     cor_matrix = df.corr().to_numpy()
+   
     group_labels_with_columns = dict(
         zip(df.columns.values, df.columns.values)
     )  # Assumes each column is group

@@ -1,4 +1,4 @@
-"""AutoMOO Utilities"""
+"""autoMOO Utilities"""
 
 import numpy as np
 import pandas as pd
@@ -7,6 +7,69 @@ from dash import html
 from dash import dcc
 from dash.dependencies import Input, Output, State
 import hiplot as hip
+import argparse
+import configparser
+
+
+def input_parser():
+    '''
+    This function parses the command line arguments.
+
+    Returns
+    -------
+    config_inputs : list
+       The function return is list of parsed arguments.
+    '''
+    my_parser = argparse.ArgumentParser()
+
+    my_parser.add_argument(
+        '-c',
+        '--config',
+        type=str,
+        action='store',
+        help="This is the config file that" +
+        " stores the preferences and paths",
+        required=True
+    )
+
+    config_inputs = my_parser.parse_args()
+    return config_inputs
+  
+
+def config_parser(arguments):
+    '''
+    This function parses the config file.
+
+    Parameters
+    ----------
+    arguments
+
+    Returns
+    -------
+    data_file: str
+        Data file pulled from config file
+    dashboard preferences TBD : str, int etc
+        TBD
+    '''
+    # checking config file
+    if arguments.config is None:
+        raise TypeError('Please include config file to create dashboard')
+        sys.exit(1)
+    elif arguments.config is not None:
+        my_config = configparser.ConfigParser()
+        my_config.read(arguments.config)
+        if my_config['FILES']['input'] is None:
+            raise TypeError('Missing data file path. Please add this to your config file')
+            sys.exit(1)
+        #tempory until we create specific dashboard preferences
+        elif my_config['DASH']['TBD'] is None:
+            raise TypeError('Missing dash preferences. Please add this to your config file')
+            sys.exit(1)
+        #add elifs for dash preferences
+        else:
+            data_file = my_config['FILES']['input']
+            tbd = my_config['DASH']['TBD']
+    return data_file, tbd
 
 
 def group_columns(
