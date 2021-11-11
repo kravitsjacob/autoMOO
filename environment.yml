@@ -8,4 +8,6 @@ dependencies:
   - hiplot
   - pandas
   - pycodestyle
+  - seaborn
+  - matplotlib
 prefix: C:\Users\kravi\.conda\envs\autoMOO
