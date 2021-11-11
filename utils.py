@@ -9,6 +9,9 @@ from dash.dependencies import Input, Output, State
 import hiplot as hip
 import argparse
 import configparser
+import seaborn as sns
+import matplotlib.pyplot as plt
+import sys
 
 
 def input_parser():
@@ -42,12 +45,15 @@ def config_parser(arguments):
 
     Parameters
     ----------
-    arguments
+    arguments: list
+        This is a config file from the argument line
 
     Returns
     -------
     data_file: str
         Data file pulled from config file
+    correlation_colormap : str
+        string that dictates correlation matrix colors
     dashboard preferences TBD : str, int etc
         TBD
     '''
@@ -61,15 +67,45 @@ def config_parser(arguments):
         if my_config['FILES']['input'] is None:
             raise TypeError('Missing data file path. Please add this to your config file')
             sys.exit(1)
-        #tempory until we create specific dashboard preferences
-        elif my_config['DASH']['TBD'] is None:
-            raise TypeError('Missing dash preferences. Please add this to your config file')
+        if my_config['FILES']['input'] is None:
+            raise TypeError('Missing data file path. Please add this to your config file')
             sys.exit(1)
-        #add elifs for dash preferences
+        elif my_config['PREFERENCES']['correlation_colormap'] is None:
+            raise TypeError('Missing correlation colormap. Please add this to your config file')
+            sys.exit(1)
+        #add elifs for other dash preferences
         else:
             data_file = my_config['FILES']['input']
-            tbd = my_config['DASH']['TBD']
-    return data_file, tbd
+            tbd = my_config['PREFERENCES']['TBD']
+            correlation_colormap = my_config['PREFERENCES']['correlation_colormap']
+    return data_file, tbd, correlation_colormap
+
+
+def correlation_matrix(data,colormap):
+    '''
+    This function creates correlation matrices.
+
+    Parameters
+    ----------
+    data : dataframe
+        dataframe that holds csv data
+    colormap: str
+        string that dictates colors of correlation heatmap visual
+    
+    Returns
+    -------
+    correlations: numpy array
+        array which holds correlations
+    correlation_colormap : plot
+        correlation heatmap visual
+    '''
+    #creates correlation matrix
+    corr_mat = data.corr()
+    #creates numpy array of correlations
+    correlations = corr_mat.to_numpy()
+    #creates a heatmap visualization that can be used by researcher
+    correlation_visual = sns.heatmap(corr_mat, annot=True, cmap=colormap)
+    return correlations, correlation_visual
 
 
 def group_columns(
