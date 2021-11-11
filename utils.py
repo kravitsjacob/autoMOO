@@ -1,4 +1,4 @@
-"""AutoMOO Utilities"""
+"""autoMOO Utilities"""
 
 import numpy as np
 import pandas as pd
@@ -7,7 +7,34 @@ from dash import html
 from dash import dcc
 from dash.dependencies import Input, Output, State
 import hiplot as hip
+import argparse
+import configparser
 
+
+# parser function
+def input_parser():
+    '''
+    This function parses the command line arguments.
+    Returns
+    -------
+    config_inputs : list
+       The function return is list of parsed arguments.
+    '''
+    my_parser = argparse.ArgumentParser()
+
+    my_parser.add_argument(
+        '-c',
+        '--config',
+        type=str,
+        action='store',
+        help="This is the config file that" +
+        " stores the preferences and paths",
+        required=False
+    )
+
+    config_inputs = my_parser.parse_args()
+    return config_inputs
+        
 
 def group_columns(
         group_labels_with_columns,
