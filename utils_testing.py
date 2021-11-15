@@ -56,6 +56,34 @@ class AnalysisLib(unittest.TestCase):
         group_labels_with_columns_expect = {'Group 1': ['A', 'B', 'C']}
         group_values_expect = np.array([1, 2, 3])
 
+    def test_column_grouping_no_grouping(self):
+        # Setup
+        df_test = pd.DataFrame(
+            {
+                'A': [0, 1, 2],
+                'B': [2, 1, 0],
+                'C': [1, 1, 2]
+            }
+        )
+        cor_matrix, cor_matrix_visual = utils.correlation_matrix(df_test, None)
+        data = df_test.to_numpy()
+        column_labels = dict(
+            zip(df_test.columns.values, df_test.columns.values)
+        )
+        cor_threshold = 0.9
+
+        # Run
+        group_labels_with_columns, group_values = utils.group_columns(
+            column_labels,
+            data,
+            cor_threshold,
+            cor_matrix
+        )
+
+        # Test
+        group_labels_with_columns_expect = column_labels
+        group_values_expect = data
+
 
 if __name__ == '__main__':
     unittest.main()
