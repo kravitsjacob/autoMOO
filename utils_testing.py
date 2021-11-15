@@ -2,6 +2,7 @@
 
 import unittest
 import pandas as pd
+import numpy as np
 
 import utils
 
@@ -26,6 +27,34 @@ class AnalysisLib(unittest.TestCase):
             group_values,
             cor_matrix
         )
+
+    def test_column_grouping_all_grouping(self):
+        # Setup
+        df_test = pd.DataFrame(
+            {
+                'A': [0, 1, 2],
+                'B': [0, 1, 2],
+                'C': [0, 1, 2]
+            }
+        )
+        cor_matrix, cor_matrix_visual = utils.correlation_matrix(df_test, None)
+        data = df_test.to_numpy()
+        column_labels = dict(
+            zip(df_test.columns.values, df_test.columns.values)
+        )
+        cor_threshold = 0.5
+
+        # Run
+        group_labels_with_columns, group_values = utils.group_columns(
+            column_labels,
+            data,
+            cor_threshold,
+            cor_matrix
+        )
+
+        # Test
+        group_labels_with_columns_expect = {'Group 1': ['A', 'B', 'C']}
+        group_values_expect = np.array([1, 2, 3])
 
 
 if __name__ == '__main__':
