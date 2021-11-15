@@ -154,14 +154,14 @@ def group_columns(
             for leftover in range(val+1, len(col_list), 1):
                 # pull correlation value
                 correlation_val = cor_matrix(val, leftover)
-                if correlation_val > threshold:  # if higher than threshold
+                if correlation_val > cor_threshold:  # if higher than threshold
                     stor = col_list(leftover)  # get name of column
                     # store name of column in group
                     group_labels_with_columns[str(group_label)].append(stor)
                 else:
                     pass
         # if group only has one entry
-        if len(group_labels_wth_columns[str(group_label)]) < 2:
+        if len(group_labels_with_columns[str(group_label)]) < 2:
             new = str(name)
             old = str(group_label)
             # change key name to original
