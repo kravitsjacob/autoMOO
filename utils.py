@@ -136,37 +136,35 @@ def group_columns(
     group_values: ndarray
         Updated `group_values` based on `cor_threshold`
     """
-    group_labels_with_columns = {}  # initialize empty dictionary
-    group_values = np.array([])  # initialize empty array
+    group_labels_with_columns = {'Group 1': []}  # initialize empty dictionary
+    group_values = []  # initialize empty array
     group_label = 0
     val = -1
     col_list = list(column_labels.keys())  # create list of column labels
     for name in column_labels:
         val = val + 1  # iterable value for correlation check
-        # if group label not included in grouped dictionary already
-        if any(name != i for i in group_labels_with_columns.values()):
+
+        # List currently grouped columns
+        group_cols = sorted({x for v in group_labels_with_columns.values() for x in v})
+
+        # if group label not included in grouped columns already
+        if name not in group_cols:
             group_label = group_label + 1
+            group_label = 'Group ' + str(group_label)
             # store previous label in new group
-            group_labels_with_columns[str(group_label)] = name
+            group_labels_with_columns[group_label] = [name]
             # add column data to grouped data
             group_values.append(data[:, val])
             # remaining column labels
             for leftover in range(val+1, len(col_list), 1):
                 # pull correlation value
-                correlation_val = cor_matrix(val, leftover)
+                correlation_val = cor_matrix[val, leftover]
                 if correlation_val > cor_threshold:  # if higher than threshold
-                    stor = col_list(leftover)  # get name of column
+                    stor = col_list[leftover]  # get name of column
                     # store name of column in group
-                    group_labels_with_columns[str(group_label)].append(stor)
+                    group_labels_with_columns[group_label].append(stor)
                 else:
                     pass
-        # if group only has one entry
-        if len(group_labels_with_columns[str(group_label)]) < 2:
-            new = str(name)
-            old = str(group_label)
-            # change key name to original
-            group_labels_with_columns[new] = group_labels_with_columns.pop(old)
-
     return group_labels_with_columns, group_values
 
 
