@@ -81,7 +81,11 @@ class AnalysisLib(unittest.TestCase):
         )
 
         # Test
-        group_labels_with_columns_expect = column_labels
+        group_labels_with_columns_expect = {
+            'Group 1': ['A'],
+            'Group 2': ['B'],
+            'Group 3': ['C']
+        }
         group_values_expect = data
 
     def test_column_grouping_basic_grouping(self):
@@ -114,7 +118,13 @@ class AnalysisLib(unittest.TestCase):
             'Group 1': ['A', 'B'],
             'Group 2': ['C', 'D']
         }
-        group_values_expect = np.array([[0, 1, 2], [2, 1, 0]])
+        group_values_expect = np.array(
+            [
+                [0, 2],
+                [1, 1],
+                [2, 0]
+            ]
+        )
 
 
 if __name__ == '__main__':
