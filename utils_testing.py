@@ -54,7 +54,7 @@ class AnalysisLib(unittest.TestCase):
 
         # Test
         group_labels_with_columns_expect = {'Group 1': ['A', 'B', 'C']}
-        group_values_expect = np.array([1, 2, 3])
+        group_values_expect = np.array([0, 1, 2])
 
     def test_column_grouping_no_grouping(self):
         # Setup
