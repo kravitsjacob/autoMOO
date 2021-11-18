@@ -202,20 +202,6 @@ def create_dashboard(
         [
             dbc.Row(dbc.Col(html.H1('AutoMOO'))),
             dbc.Row(
-                [
-                    dbc.Col(
-                        dcc.Graph(id='correlation_matrix', figure=cor_fig)
-                    ),
-                    dbc.Col(
-                        dash_table.DataTable(
-                            id='group_table',
-                            data=[{'A': 1, 'B': 2}, {'A': 3, 'B': 2}],
-                            columns=[{'name': 'A', 'id': 'A'}, {'name': 'B', 'id': 'B'}]
-                        )
-                    )
-                ]
-            ),
-            dbc.Row(
                 dbc.Col(
                     [
                         html.Label(
@@ -234,7 +220,23 @@ def create_dashboard(
                         )
                     ]
                 )
-
+            ),
+            dbc.Row(
+                [
+                    dbc.Col(
+                        dcc.Graph(id='correlation_matrix', figure=cor_fig)
+                    ),
+                    dbc.Col(
+                        dash_table.DataTable(
+                            id='group_table',
+                            #data=[{'A': 1, 'B': 2}, {'A': 3, 'B': 2}],
+                            columns=[
+                                {'name': 'Group', 'id': 'Group'},
+                                {'name': 'Columns', 'id': 'Columns'}
+                            ]
+                        )
+                    )
+                ]
             ),
             dbc.Row(
                 dbc.Col(
@@ -262,9 +264,15 @@ def create_dashboard(
         Output('memory', 'data'),
         Input('update_button', 'n_clicks'),
         State('cor_threshold', 'value'),
-        State('memory', 'data')
+        State('group_table', 'data'),
+        State('memory', 'data'),
     )
-    def update_parallel(n_clicks, cor_threshold, memory_data):
+    def update_parallel(
+            n_clicks,
+            cor_threshold,
+            group_table_data,
+            memory_data
+    ):
         """
         Update parallel axis plots
 
@@ -274,6 +282,8 @@ def create_dashboard(
             Number of times button pressed
         cor_threshold: float
             Current correlation threshold selected by the user
+        group_table_data: dict
+            Group labels and columns within each group
         memory_data: dict
             Data stored in memory
 
