@@ -6,6 +6,7 @@ import dash
 from dash import html
 from dash import dcc
 from dash.dependencies import Input, Output, State
+import dash_bootstrap_components as dbc
 import hiplot as hip
 import argparse
 import configparser
@@ -194,28 +195,43 @@ def create_dashboard(
     app: Dash
         AutoMOO dashboard
     """
-    app = dash.Dash(__name__)
+    app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-    app.layout = html.Div(
+    app.layout = dbc.Container(
         [
-            html.Label(
-                [
-                    'Select Correlation Threshold',
-                    dcc.Input(
-                        id='cor_threshold',
-                        type='number'
-                    )
-                ]
+            dbc.Row(dbc.Col(html.H1('AutoMOO'))),
+            dbc.Row(dbc.Col(html.H2('Dataset Information'))),
+
+            dbc.Row(dbc.Col(html.H2('Column Grouping'))),
+            dbc.Row(
+                dbc.Col(
+                    [
+                        html.Label(
+                            [
+                                'Select Correlation Threshold',
+                                dcc.Input(
+                                    id='cor_threshold',
+                                    type='number'
+                                )
+                            ]
+                        ),
+                        html.Button(
+                            id='update_button',
+                            n_clicks=0,
+                            children='Update Plot'
+                        )
+                    ]
+                )
+
             ),
-            html.Button(
-                id='update_button',
-                n_clicks=0,
-                children='Update Plot'
-            ),
-            html.Div(
-                html.Iframe(
-                    id='parallel',
-                    style={'width': '100%', 'height': '1080px'}
+            dbc.Row(
+                dbc.Col(
+                    html.Div(
+                        html.Iframe(
+                            id='parallel',
+                            style={'width': '100%', 'height': '1080px'}
+                        )
+                    ),
                 )
             ),
             dcc.Store(
