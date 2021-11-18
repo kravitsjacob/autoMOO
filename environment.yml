@@ -10,4 +10,5 @@ dependencies:
   - pycodestyle
   - seaborn
   - matplotlib
+  - dash-bootstrap-components
 prefix: C:\Users\kravi\.conda\envs\autoMOO
