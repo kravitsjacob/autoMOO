@@ -2,6 +2,7 @@
 
 import pandas as pd
 import utils
+import plotly.graph_objects as go
 
 
 def main():
@@ -17,18 +18,22 @@ def main():
     # Reading data csv
     df = pd.read_csv(data_file)
 
-    # creating correlation matrices
+    # Creating correlation matrices
     cor_matrix, cor_matrix_visual = utils.correlation_matrix(df, corr_colormap)
     group_labels_with_columns = dict(
         zip(df.columns.values, df.columns.values)
     )  # Assumes each column is a group
     group_values = df.to_numpy()
 
+    # Temporary
+    cor_fig = go.Figure()
+
     # Create dashboard
     app = utils.create_dashboard(
         group_labels_with_columns,
         group_values,
-        cor_matrix
+        cor_matrix,
+        cor_fig
     )
 
     # Run dashboard
