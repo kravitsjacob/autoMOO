@@ -5,6 +5,7 @@ import pandas as pd
 import dash
 from dash import html
 from dash import dcc
+from dash import dash_table
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 import hiplot as hip
@@ -200,9 +201,20 @@ def create_dashboard(
     app.layout = dbc.Container(
         [
             dbc.Row(dbc.Col(html.H1('AutoMOO'))),
-            dbc.Row(dbc.Col(html.H2('Dataset Information'))),
-
-            dbc.Row(dbc.Col(html.H2('Column Grouping'))),
+            dbc.Row(
+                [
+                    dbc.Col(
+                        dcc.Graph(id='correlation_matrix', figure=cor_fig)
+                    ),
+                    dbc.Col(
+                        dash_table.DataTable(
+                            id='group_table',
+                            data=[{'A': 1, 'B': 2}, {'A': 3, 'B': 2}],
+                            columns=[{'name': 'A', 'id': 'A'}, {'name': 'B', 'id': 'B'}]
+                        )
+                    )
+                ]
+            ),
             dbc.Row(
                 dbc.Col(
                     [
