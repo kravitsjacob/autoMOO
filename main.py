@@ -19,10 +19,9 @@ def main():
 
     # creating correlation matrices
     cor_matrix, cor_matrix_visual = utils.correlation_matrix(df, corr_colormap)
-  
     group_labels_with_columns = dict(
         zip(df.columns.values, df.columns.values)
-    )  # Assumes each column is group
+    )  # Assumes each column is a group
     group_values = df.to_numpy()
 
     # Create dashboard
