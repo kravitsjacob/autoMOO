@@ -168,7 +168,12 @@ def group_columns(
     return group_labels_with_columns, group_values
 
 
-def create_dashboard(group_labels_with_columns, group_values, cor_matrix):
+def create_dashboard(
+        group_labels_with_columns,
+        group_values,
+        cor_matrix,
+        cor_fig
+):
     """
     Create dash app
 
@@ -180,7 +185,9 @@ def create_dashboard(group_labels_with_columns, group_values, cor_matrix):
     group_values: ndarray
         Numpy array with each column being the values for each group
     cor_matrix: ndarray
-        Numpy arrary of column correlations
+        Numpy array of column correlations
+    cor_fig: plotly.graph_objs._figure.Figure
+        Plotly figure of column correlations
 
     Returns
     -------
