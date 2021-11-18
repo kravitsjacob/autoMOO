@@ -3,6 +3,7 @@
 import unittest
 import pandas as pd
 import numpy as np
+import plotly.graph_objects as go
 
 import utils
 
@@ -25,7 +26,8 @@ class AnalysisLib(unittest.TestCase):
         utils.create_dashboard(
             group_labels_with_columns,
             group_values,
-            cor_matrix
+            cor_matrix,
+            cor_fig=go.Figure()
         )
 
     def test_column_grouping_all_grouping(self):
