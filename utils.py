@@ -280,7 +280,7 @@ def create_dashboard(
 
     @app.callback(
         Output('parallel', 'srcDoc'),
-        Output('memory', 'data'),
+        Output('group_table', 'data'),
         Input('update_button', 'n_clicks'),
         State('cor_threshold', 'value'),
         State('group_table', 'data'),
@@ -331,11 +331,9 @@ def create_dashboard(
                 cor_matrix
             )
 
-            # Create parallel plot
-            df = pd.DataFrame(
-                new_group_values,
-                columns=new_group_labels_with_columns.keys()
-            )
+            # Update parallel plot
+            df = pd.DataFrame(new_group_values).T
+            df.columns = new_group_labels_with_columns.keys()
             exp = hip.Experiment.from_dataframe(df)
             exp.display_data(
                 hip.Displays.PARALLEL_PLOT
@@ -345,10 +343,11 @@ def create_dashboard(
             ).update({'hide': ['uid', 'from_uid']})
             srcdoc = exp.to_html()  # Store html as string
 
-            # Pack in memory data
-            memory_data['group_labels_with_columns'] = \
-                new_group_labels_with_columns
-            memory_data['group_values'] = new_group_values
-        return srcdoc, memory_data
+            # Update group table
+            group_table_data = []
+            for key, value in new_group_labels_with_columns.items():
+                group_table_data.append({'Group': key, 'Columns': value})
+
+        return srcdoc, group_table_data
 
     return app
