@@ -170,6 +170,25 @@ def group_columns(
     return group_labels_with_columns, group_values
 
 
+def group_columns_temp(
+        column_labels,
+        data,
+        cor_threshold,
+        cor_matrix
+):
+    # Create labels
+    group_labels_with_columns = {}
+    for i, column in enumerate(column_labels):
+        group_labels_with_columns['Group ' + str(i + 1)] = [column]
+
+    # Create data
+    group_values = []
+    for i in range(data.shape[1]):
+        group_values.append(data[:, i])
+
+    return group_labels_with_columns, group_values
+
+
 def create_dashboard(
         group_labels_with_columns,
         group_values,
@@ -305,7 +324,7 @@ def create_dashboard(
             srcdoc = ''
         else:
             # TODO Create column grouping algorithm
-            new_group_labels_with_columns, new_group_values = group_columns(
+            new_group_labels_with_columns, new_group_values = group_columns_temp(
                 old_group_labels_with_columns,
                 old_group_values,
                 cor_threshold,
