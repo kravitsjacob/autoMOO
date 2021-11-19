@@ -150,9 +150,9 @@ def group_columns(
         # if group label not included in grouped columns already
         if name not in group_cols:
             group_label = group_label + 1
-            group_label = 'Group ' + str(group_label)
+            group_name = 'Group ' + str(group_label)
             # store previous label in new group
-            group_labels_with_columns[group_label] = [name]
+            group_labels_with_columns[group_name] = [name]
             # add column data to grouped data
             group_values.append(data[:, val])
             # remaining column labels
@@ -162,7 +162,7 @@ def group_columns(
                 if correlation_val > cor_threshold:  # if higher than threshold
                     stor = col_list[leftover]  # get name of column
                     # store name of column in group
-                    group_labels_with_columns[group_label].append(stor)
+                    group_labels_with_columns[group_name].append(stor)
                 else:
                     pass
     return group_labels_with_columns, group_values
