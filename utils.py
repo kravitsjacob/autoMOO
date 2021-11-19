@@ -9,8 +9,8 @@ from dash.dependencies import Input, Output, State
 import hiplot as hip
 import argparse
 import configparser
-import seaborn as sns
-import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.graph_objs as go
 import sys
 
 
@@ -104,7 +104,8 @@ def correlation_matrix(data,colormap):
     #creates numpy array of correlations
     correlations = corr_mat.to_numpy()
     #creates a heatmap visualization that can be used by researcher
-    correlation_visual = sns.heatmap(corr_mat, annot=True, cmap=colormap)
+    correlation_visual = go.Heatmap(z=corr_mat.values, x=corr_mat.index.values, y= corr_mat.columns.values, colorscale= px.color.diverging.colormap,showscale=True, ygap=1, xgap=1)
+    
     return correlations, correlation_visual
 
 
