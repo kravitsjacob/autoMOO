@@ -61,12 +61,12 @@ class AnalysisLib(unittest.TestCase):
             group_labels_with_columns,
             group_labels_with_columns_expect
         )
-        
+
         for i in range(len(group_values_modified)):
             self.assertEqual(
-            group_values_modified, 
-            group_values_expect
-        )
+                group_values_modified,
+                group_values_expect
+            )
 
     def test_column_grouping_no_grouping(self):
         # Setup
@@ -98,15 +98,15 @@ class AnalysisLib(unittest.TestCase):
             'Group 2': ['B'],
             'Group 3': ['C']
         }
-        group_values_expect = [[0,1,2], [2,1,0], [1,1,2]]
+        group_values_expect = [[0, 1, 2], [2, 1, 0], [1, 1, 2]]
         group_values_modified = [cols.tolist() for cols in group_values]
-        
+
         for i in range(len(group_values_modified)):
             self.assertEqual(
-            group_values_modified, 
-            group_values_expect
-        )
-        
+                group_values_modified,
+                group_values_expect
+            )
+
         self.assertEqual(
             group_labels_with_columns,
             group_labels_with_columns_expect
@@ -143,18 +143,19 @@ class AnalysisLib(unittest.TestCase):
             'Group 2': ['C', 'D']
         }
         group_values_modified = [cols.tolist() for cols in group_values]
-        group_values_expect = [[0,1,2],[2,1,0]]
+        group_values_expect = [[0, 1, 2], [2, 1, 0]]
 
         self.assertEqual(
             group_labels_with_columns,
             group_labels_with_columns_expect
         )
-        
+
         for i in range(len(group_values_modified)):
             self.assertEqual(
-            group_values_modified, 
-            group_values_expect
-        )
+                group_values_modified,
+                group_values_expect
+            )
+
 
 if __name__ == '__main__':
     unittest.main()
