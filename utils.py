@@ -37,7 +37,7 @@ def input_parser():
 
     config_inputs = my_parser.parse_args()
     return config_inputs
-  
+
 
 def config_parser(arguments):
     '''
@@ -73,7 +73,7 @@ def config_parser(arguments):
         elif my_config['PREFERENCES']['correlation_colormap'] is None:
             raise TypeError('Missing correlation colormap. Please add this to your config file')
             sys.exit(1)
-        #add elifs for other dash preferences
+        # add elifs for other dash preferences
         else:
             data_file = my_config['FILES']['input']
             tbd = my_config['PREFERENCES']['TBD']
@@ -81,7 +81,7 @@ def config_parser(arguments):
     return data_file, tbd, correlation_colormap
 
 
-def correlation_matrix(data,colormap):
+def correlation_matrix(data, colormap):
     '''
     This function creates correlation matrices.
 
@@ -91,7 +91,7 @@ def correlation_matrix(data,colormap):
         dataframe that holds csv data
     colormap: str
         string that dictates colors of correlation heatmap visual
-    
+
     Returns
     -------
     correlations: numpy array
@@ -99,11 +99,11 @@ def correlation_matrix(data,colormap):
     correlation_colormap : plot
         correlation heatmap visual
     '''
-    #creates correlation matrix
+    # creates correlation matrix
     corr_mat = data.corr()
-    #creates numpy array of correlations
+    # creates numpy array of correlations
     correlations = corr_mat.to_numpy()
-    #creates a heatmap visualization that can be used by researcher
+    # creates a heatmap visualization that can be used by researcher
     correlation_visual = sns.heatmap(corr_mat, annot=True, cmap=colormap)
     return correlations, correlation_visual
 
