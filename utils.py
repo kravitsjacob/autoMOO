@@ -83,7 +83,10 @@ def config_parser(arguments):
     return data_file, tbd, correlation_colormap
 
 
-def correlation_matrix(data, colormap):
+def correlation_matrix(
+        data,
+        colormap=px.colors.diverging.BrBG
+):
     """
     This function creates correlation matrices.
 
@@ -91,8 +94,8 @@ def correlation_matrix(data, colormap):
     ----------
     data : dataframe
         dataframe that holds csv data
-    colormap: str
-        string that dictates colors of correlation heatmap visual
+    colormap: list
+        List of plotly colormap
     
     Returns
     -------
@@ -111,8 +114,8 @@ def correlation_matrix(data, colormap):
     correlation_visual = go.Heatmap(
         z=corr_mat.values,
         x=corr_mat.index.values,
-        y= corr_mat.columns.values,
-        colorscale=px.color.diverging.colormap,
+        y=corr_mat.columns.values,
+        colorscale=colormap,
         showscale=True,
         ygap=1,
         xgap=1
