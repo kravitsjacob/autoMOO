@@ -11,7 +11,9 @@ This tutorial assumes the use of [gitbash](https://git-scm.com/downloads) or a U
 6. Run the analysis by running `$bash run.sh`
 
 # Example Output
-
+Here is an example autoMOO dashboard for one of the included default datasets!
+![autoMOO_top](autoMOO/static/autoMOO_top.PNG)
+![autoMOO_bottom](autoMOO/static/autoMOO_bottom.PNG)
 
 # Contents
 ```
@@ -28,9 +30,13 @@ autoMOO
 ├───example_datasets: Example datasets for AutoMOO
 │       machine_learning_dam_hazard.csv
 │       water_energy_sensitivity.csv
+|
+├───autoMOO: AutoMOO documentation
+│   └───static: Static images of example dashboard
+│           autoMOO_bottom.PNG
+│           autoMOO_top.PNG
 │
 └───.github: Github actions
     └───workflows
             python-package-conda.yml
 ```
-
