@@ -84,10 +84,9 @@ def config_parser(arguments):
             sys.exit(1)
         else:
             data_file = my_config['FILES']['input']
-            tbd = my_config['PREFERENCES']['TBD']
             correlation_colormap = \
                 my_config['PREFERENCES']['correlation_colormap']
-    return data_file, tbd, correlation_colormap
+    return data_file, correlation_colormap
 
 
 def correlation_matrix(
