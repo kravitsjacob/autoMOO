@@ -83,8 +83,8 @@ def config_parser(arguments):
     return data_file, tbd, correlation_colormap
 
 
-def correlation_matrix(data,colormap):
-    '''
+def correlation_matrix(data, colormap):
+    """
     This function creates correlation matrices.
 
     Parameters
@@ -98,15 +98,25 @@ def correlation_matrix(data,colormap):
     -------
     correlations: numpy array
         array which holds correlations
-    correlation_colormap : plot
-        correlation heatmap visual
-    '''
-    #creates correlation matrix
+    correlation_visual: plotly.graph_objs._figure.Figure
+        Plotly figure of column correlations
+    """
+    # Creates correlation matrix
     corr_mat = data.corr()
-    #creates numpy array of correlations
+
+    # Creates numpy array of correlations
     correlations = corr_mat.to_numpy()
-    #creates a heatmap visualization that can be used by researcher
-    correlation_visual = go.Heatmap(z=corr_mat.values, x=corr_mat.index.values, y= corr_mat.columns.values, colorscale= px.color.diverging.colormap,showscale=True, ygap=1, xgap=1)
+
+    # Creates a heatmap visualization that can be used by researcher
+    correlation_visual = go.Heatmap(
+        z=corr_mat.values,
+        x=corr_mat.index.values,
+        y= corr_mat.columns.values,
+        colorscale=px.color.diverging.colormap,
+        showscale=True,
+        ygap=1,
+        xgap=1
+    )
     
     return correlations, correlation_visual
 
