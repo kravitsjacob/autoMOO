@@ -256,6 +256,14 @@ def create_dashboard(
                             columns=[
                                 {'name': 'Group', 'id': 'Group'},
                                 {'name': 'Columns', 'id': 'Columns'}
+                            ],
+                            style_data={
+                                'whiteSpace': 'normal',
+                                'height': 'auto',
+                            },
+                            style_cell_conditional=[
+                                {'if': {'column_id': 'Group'},
+                                 'width': '20%'}
                             ]
                         )
                     )
