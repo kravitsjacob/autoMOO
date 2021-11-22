@@ -111,14 +111,16 @@ def correlation_matrix(
     correlations = corr_mat.to_numpy()
 
     # Creates a heatmap visualization that can be used by researcher
-    correlation_visual = go.Heatmap(
-        z=corr_mat.values,
-        x=corr_mat.index.values,
-        y=corr_mat.columns.values,
-        colorscale=colormap,
-        showscale=True,
-        ygap=1,
-        xgap=1
+    correlation_visual = go.Figure(
+        go.Heatmap(
+            z=corr_mat.values,
+            x=corr_mat.index.values,
+            y=corr_mat.columns.values,
+            colorscale=colormap,
+            showscale=True,
+            ygap=1,
+            xgap=1
+        )
     )
     
     return correlations, correlation_visual
