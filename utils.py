@@ -17,14 +17,14 @@ import sys
 
 
 def input_parser():
-    '''
+    """
     This function parses the command line arguments.
 
     Returns
     -------
     config_inputs : list
        The function return is list of parsed arguments.
-    '''
+    """
     my_parser = argparse.ArgumentParser()
 
     my_parser.add_argument(
@@ -39,10 +39,10 @@ def input_parser():
 
     config_inputs = my_parser.parse_args()
     return config_inputs
-  
+
 
 def config_parser(arguments):
-    '''
+    """
     This function parses the config file.
 
     Parameters
@@ -58,7 +58,7 @@ def config_parser(arguments):
         string that dictates correlation matrix colors
     dashboard preferences TBD : str, int etc
         TBD
-    '''
+    """
     # checking config file
     if arguments.config is None:
         raise TypeError('Please include config file to create dashboard')
@@ -67,19 +67,27 @@ def config_parser(arguments):
         my_config = configparser.ConfigParser()
         my_config.read(arguments.config)
         if my_config['FILES']['input'] is None:
-            raise TypeError('Missing data file path. Please add this to your config file')
+            raise TypeError(
+                'Missing data file path. Please add this to your config file'
+            )
             sys.exit(1)
         if my_config['FILES']['input'] is None:
-            raise TypeError('Missing data file path. Please add this to your config file')
+            raise TypeError(
+                'Missing data file path. Please add this to your config file'
+            )
             sys.exit(1)
         elif my_config['PREFERENCES']['correlation_colormap'] is None:
-            raise TypeError('Missing correlation colormap. Please add this to your config file')
+            raise TypeError(
+                'Missing correlation colormap. Please add this to your config'
+                ' file'
+            )
             sys.exit(1)
-        #add elifs for other dash preferences
+        # Add elifs for other dash preferences
         else:
             data_file = my_config['FILES']['input']
             tbd = my_config['PREFERENCES']['TBD']
-            correlation_colormap = my_config['PREFERENCES']['correlation_colormap']
+            correlation_colormap = \
+                my_config['PREFERENCES']['correlation_colormap']
     return data_file, tbd, correlation_colormap
 
 
@@ -96,7 +104,7 @@ def correlation_matrix(
         dataframe that holds csv data
     colormap: list
         List of plotly colormap
-    
+
     Returns
     -------
     correlations: numpy array
@@ -122,7 +130,7 @@ def correlation_matrix(
             xgap=1
         )
     )
-    
+
     return correlations, correlation_visual
 
 
@@ -163,7 +171,9 @@ def group_columns(
         val = val + 1  # iterable value for correlation check
 
         # List currently grouped columns
-        group_cols = sorted({x for v in group_labels_with_columns.values() for x in v})
+        group_cols = sorted(
+            {x for v in group_labels_with_columns.values() for x in v}
+        )
 
         # if group label not included in grouped columns already
         if name not in group_cols:
@@ -264,7 +274,6 @@ def create_dashboard(
                     dbc.Col(
                         dash_table.DataTable(
                             id='group_table',
-                            #data=[{'A': 1, 'B': 2}, {'A': 3, 'B': 2}],
                             columns=[
                                 {'name': 'Group', 'id': 'Group'},
                                 {'name': 'Columns', 'id': 'Columns'}
@@ -340,12 +349,13 @@ def create_dashboard(
             srcdoc = ''
         else:
             # TODO Create column grouping algorithm
-            new_group_labels_with_columns, new_group_values = group_columns_temp(
-                old_group_labels_with_columns,
-                old_group_values,
-                cor_threshold,
-                cor_matrix
-            )
+            new_group_labels_with_columns, new_group_values = \
+                group_columns_temp(
+                    old_group_labels_with_columns,
+                    old_group_values,
+                    cor_threshold,
+                    cor_matrix
+                )
 
             # Update parallel plot
             df = pd.DataFrame(new_group_values).T
