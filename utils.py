@@ -84,10 +84,9 @@ def config_parser(arguments):
             sys.exit(1)
         else:
             data_file = my_config['FILES']['input']
-            tbd = my_config['PREFERENCES']['TBD']
             correlation_colormap = \
                 my_config['PREFERENCES']['correlation_colormap']
-    return data_file, tbd, correlation_colormap
+    return data_file, correlation_colormap
 
 
 def correlation_matrix(
@@ -194,25 +193,6 @@ def group_columns(
     return group_labels_with_columns, group_values
 
 
-def group_columns_temp(
-        column_labels,
-        data,
-        cor_threshold,
-        cor_matrix
-):
-    # Create labels
-    group_labels_with_columns = {}
-    for i, column in enumerate(column_labels):
-        group_labels_with_columns['Group ' + str(i + 1)] = [column]
-
-    # Create data
-    group_values = []
-    for i in range(data.shape[1]):
-        group_values.append(data[:, i])
-
-    return group_labels_with_columns, group_values
-
-
 def create_dashboard(
         group_labels_with_columns,
         group_values,
@@ -275,6 +255,14 @@ def create_dashboard(
                             columns=[
                                 {'name': 'Group', 'id': 'Group'},
                                 {'name': 'Columns', 'id': 'Columns'}
+                            ],
+                            style_data={
+                                'whiteSpace': 'normal',
+                                'height': 'auto',
+                            },
+                            style_cell_conditional=[
+                                {'if': {'column_id': 'Group'},
+                                 'width': '20%'}
                             ]
                         )
                     )
@@ -346,14 +334,12 @@ def create_dashboard(
         if n_clicks == 0:
             srcdoc = ''
         else:
-            # TODO Create column grouping algorithm
-            new_group_labels_with_columns, new_group_values = \
-                group_columns_temp(
-                    old_group_labels_with_columns,
-                    old_group_values,
-                    cor_threshold,
-                    cor_matrix
-                )
+            new_group_labels_with_columns, new_group_values = group_columns(
+                old_group_labels_with_columns,
+                old_group_values,
+                cor_threshold,
+                cor_matrix
+            )
 
             # Update parallel plot
             df = pd.DataFrame(new_group_values).T
@@ -370,7 +356,9 @@ def create_dashboard(
             # Update group table
             group_table_data = []
             for key, value in new_group_labels_with_columns.items():
-                group_table_data.append({'Group': key, 'Columns': value})
+                group_table_data.append(
+                    {'Group': key, 'Columns': ', '.join(value)}
+                )
 
         return srcdoc, group_table_data
 
