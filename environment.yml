@@ -10,4 +10,6 @@ dependencies:
   - pycodestyle
   - seaborn
   - matplotlib
+  - dash-bootstrap-components
+  - dash-table
 prefix: C:\Users\kravi\.conda\envs\autoMOO

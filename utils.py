@@ -5,24 +5,26 @@ import pandas as pd
 import dash
 from dash import html
 from dash import dcc
+from dash import dash_table
 from dash.dependencies import Input, Output, State
+import dash_bootstrap_components as dbc
 import hiplot as hip
 import argparse
 import configparser
-import seaborn as sns
-import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.graph_objs as go
 import sys
 
 
 def input_parser():
-    '''
+    """
     This function parses the command line arguments.
 
     Returns
     -------
     config_inputs : list
        The function return is list of parsed arguments.
-    '''
+    """
     my_parser = argparse.ArgumentParser()
 
     my_parser.add_argument(
@@ -40,7 +42,7 @@ def input_parser():
 
 
 def config_parser(arguments):
-    '''
+    """
     This function parses the config file.
 
     Parameters
@@ -56,7 +58,7 @@ def config_parser(arguments):
         string that dictates correlation matrix colors
     dashboard preferences TBD : str, int etc
         TBD
-    '''
+    """
     # checking config file
     if arguments.config is None:
         raise TypeError('Please include config file to create dashboard')
@@ -65,46 +67,68 @@ def config_parser(arguments):
         my_config = configparser.ConfigParser()
         my_config.read(arguments.config)
         if my_config['FILES']['input'] is None:
-            raise TypeError('Missing data file path. Please add this to your config file')
+            raise TypeError(
+                'Missing data file path. Please add this to your config file'
+            )
             sys.exit(1)
         if my_config['FILES']['input'] is None:
-            raise TypeError('Missing data file path. Please add this to your config file')
+            raise TypeError(
+                'Missing data file path. Please add this to your config file'
+            )
             sys.exit(1)
         elif my_config['PREFERENCES']['correlation_colormap'] is None:
-            raise TypeError('Missing correlation colormap. Please add this to your config file')
+            raise TypeError(
+                'Missing correlation colormap. Please add this to your config'
+                ' file'
+            )
             sys.exit(1)
-        # add elifs for other dash preferences
         else:
             data_file = my_config['FILES']['input']
             tbd = my_config['PREFERENCES']['TBD']
-            correlation_colormap = my_config['PREFERENCES']['correlation_colormap']
+            correlation_colormap = \
+                my_config['PREFERENCES']['correlation_colormap']
     return data_file, tbd, correlation_colormap
 
 
-def correlation_matrix(data, colormap):
-    '''
+def correlation_matrix(
+        data,
+        colormap=px.colors.diverging.RdBu
+):
+    """
     This function creates correlation matrices.
 
     Parameters
     ----------
     data : dataframe
         dataframe that holds csv data
-    colormap: str
-        string that dictates colors of correlation heatmap visual
+    colormap: list
+        List of plotly colormap
 
     Returns
     -------
     correlations: numpy array
         array which holds correlations
-    correlation_colormap : plot
-        correlation heatmap visual
-    '''
-    # creates correlation matrix
+    correlation_visual: plotly.graph_objs._figure.Figure
+        Plotly figure of column correlations
+    """
+    # Creates correlation matrix
     corr_mat = data.corr()
-    # creates numpy array of correlations
+
+    # Creates numpy array of correlations
     correlations = corr_mat.to_numpy()
-    # creates a heatmap visualization that can be used by researcher
-    correlation_visual = sns.heatmap(corr_mat, annot=True, cmap=colormap)
+
+    # Creates a heatmap visualization that can be used by researcher
+    correlation_visual = go.Figure(
+        go.Heatmap(
+            z=corr_mat.values,
+            x=corr_mat.index.values,
+            y=corr_mat.columns.values,
+            colorscale=colormap,
+            showscale=True,
+            ygap=1,
+            xgap=1
+        )
+    )
     return correlations, correlation_visual
 
 
@@ -145,7 +169,9 @@ def group_columns(
         val = val + 1  # iterable value for correlation check
 
         # List currently grouped columns
-        group_cols = sorted({x for v in group_labels_with_columns.values() for x in v})
+        group_cols = sorted(
+            {x for v in group_labels_with_columns.values() for x in v}
+        )
 
         # if group label not included in grouped columns already
         if name not in group_cols:
@@ -168,7 +194,31 @@ def group_columns(
     return group_labels_with_columns, group_values
 
 
-def create_dashboard(group_labels_with_columns, group_values, cor_matrix):
+def group_columns_temp(
+        column_labels,
+        data,
+        cor_threshold,
+        cor_matrix
+):
+    # Create labels
+    group_labels_with_columns = {}
+    for i, column in enumerate(column_labels):
+        group_labels_with_columns['Group ' + str(i + 1)] = [column]
+
+    # Create data
+    group_values = []
+    for i in range(data.shape[1]):
+        group_values.append(data[:, i])
+
+    return group_labels_with_columns, group_values
+
+
+def create_dashboard(
+        group_labels_with_columns,
+        group_values,
+        cor_matrix,
+        cor_fig
+):
     """
     Create dash app
 
@@ -180,35 +230,64 @@ def create_dashboard(group_labels_with_columns, group_values, cor_matrix):
     group_values: ndarray
         Numpy array with each column being the values for each group
     cor_matrix: ndarray
-        Numpy arrary of column correlations
+        Numpy array of column correlations
+    cor_fig: plotly.graph_objs._figure.Figure
+        Plotly figure of column correlations
 
     Returns
     -------
     app: Dash
         AutoMOO dashboard
     """
-    app = dash.Dash(__name__)
+    app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-    app.layout = html.Div(
+    app.layout = dbc.Container(
         [
-            html.Label(
+            dbc.Row(dbc.Col(html.H1('AutoMOO'))),
+            dbc.Row(
+                dbc.Col(
+                    [
+                        html.Label(
+                            [
+                                'Select Correlation Threshold',
+                                dcc.Input(
+                                    id='cor_threshold',
+                                    type='number'
+                                )
+                            ]
+                        ),
+                        html.Button(
+                            id='update_button',
+                            n_clicks=0,
+                            children='Update Plot'
+                        )
+                    ]
+                )
+            ),
+            dbc.Row(
                 [
-                    'Select Correlation Threshold',
-                    dcc.Input(
-                        id='cor_threshold',
-                        type='number'
+                    dbc.Col(
+                        dcc.Graph(id='correlation_matrix', figure=cor_fig)
+                    ),
+                    dbc.Col(
+                        dash_table.DataTable(
+                            id='group_table',
+                            columns=[
+                                {'name': 'Group', 'id': 'Group'},
+                                {'name': 'Columns', 'id': 'Columns'}
+                            ]
+                        )
                     )
                 ]
             ),
-            html.Button(
-                id='update_button',
-                n_clicks=0,
-                children='Update Plot'
-            ),
-            html.Div(
-                html.Iframe(
-                    id='parallel',
-                    style={'width': '100%', 'height': '1080px'}
+            dbc.Row(
+                dbc.Col(
+                    html.Div(
+                        html.Iframe(
+                            id='parallel',
+                            style={'width': '100%', 'height': '1080px'}
+                        )
+                    ),
                 )
             ),
             dcc.Store(
@@ -224,12 +303,18 @@ def create_dashboard(group_labels_with_columns, group_values, cor_matrix):
 
     @app.callback(
         Output('parallel', 'srcDoc'),
-        Output('memory', 'data'),
+        Output('group_table', 'data'),
         Input('update_button', 'n_clicks'),
         State('cor_threshold', 'value'),
-        State('memory', 'data')
+        State('group_table', 'data'),
+        State('memory', 'data'),
     )
-    def update_parallel(n_clicks, cor_threshold, memory_data):
+    def update_parallel(
+            n_clicks,
+            cor_threshold,
+            group_table_data,
+            memory_data
+    ):
         """
         Update parallel axis plots
 
@@ -239,6 +324,8 @@ def create_dashboard(group_labels_with_columns, group_values, cor_matrix):
             Number of times button pressed
         cor_threshold: float
             Current correlation threshold selected by the user
+        group_table_data: dict
+            Group labels and columns within each group
         memory_data: dict
             Data stored in memory
 
@@ -260,18 +347,17 @@ def create_dashboard(group_labels_with_columns, group_values, cor_matrix):
             srcdoc = ''
         else:
             # TODO Create column grouping algorithm
-            new_group_labels_with_columns, new_group_values = group_columns(
-                old_group_labels_with_columns,
-                old_group_values,
-                cor_threshold,
-                cor_matrix
-            )
+            new_group_labels_with_columns, new_group_values = \
+                group_columns_temp(
+                    old_group_labels_with_columns,
+                    old_group_values,
+                    cor_threshold,
+                    cor_matrix
+                )
 
-            # Create parallel plot
-            df = pd.DataFrame(
-                new_group_values,
-                columns=new_group_labels_with_columns.keys()
-            )
+            # Update parallel plot
+            df = pd.DataFrame(new_group_values).T
+            df.columns = new_group_labels_with_columns.keys()
             exp = hip.Experiment.from_dataframe(df)
             exp.display_data(
                 hip.Displays.PARALLEL_PLOT
@@ -281,10 +367,11 @@ def create_dashboard(group_labels_with_columns, group_values, cor_matrix):
             ).update({'hide': ['uid', 'from_uid']})
             srcdoc = exp.to_html()  # Store html as string
 
-            # Pack in memory data
-            memory_data['group_labels_with_columns'] = \
-                new_group_labels_with_columns
-            memory_data['group_values'] = new_group_values
-        return srcdoc, memory_data
+            # Update group table
+            group_table_data = []
+            for key, value in new_group_labels_with_columns.items():
+                group_table_data.append({'Group': key, 'Columns': value})
+
+        return srcdoc, group_table_data
 
     return app
