@@ -2,6 +2,7 @@
 
 import pandas as pd
 import utils
+import plotly.express as px
 
 
 def main():
@@ -12,13 +13,16 @@ def main():
     args = utils.input_parser()
 
     # Pulling information from config file
-    data_file, prefs, corr_colormap = utils.config_parser(args)
+    data_file, corr_colormap = utils.config_parser(args)
 
     # Reading data csv
     df = pd.read_csv(data_file)
 
     # Creating correlation matrices
-    cor_matrix, cor_fig = utils.correlation_matrix(df)
+    cor_matrix, cor_fig = utils.correlation_matrix(
+        df,
+        getattr(px.colors.diverging, corr_colormap)
+    )
     group_labels_with_columns = dict(
         zip(df.columns.values, df.columns.values)
     )  # Assumes each column is a group
