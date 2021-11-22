@@ -85,7 +85,7 @@ def config_parser(arguments):
 
 def correlation_matrix(
         data,
-        colormap=px.colors.diverging.BrBG
+        colormap=px.colors.diverging.RdBu
 ):
     """
     This function creates correlation matrices.
