@@ -349,7 +349,9 @@ def create_dashboard(
             # Update group table
             group_table_data = []
             for key, value in new_group_labels_with_columns.items():
-                group_table_data.append({'Group': key, 'Columns': value})
+                group_table_data.append(
+                    {'Group': key, 'Columns': ', '.join(value)}
+                )
 
         return srcdoc, group_table_data
 
