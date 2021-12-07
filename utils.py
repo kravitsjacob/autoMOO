@@ -1,5 +1,6 @@
 """autoMOO Utilities"""
 
+import csv
 import numpy as np
 import pandas as pd
 import dash
@@ -68,6 +69,32 @@ def input_parser():
             cor_colormap = my_config['PREFERENCES']['correlation_colormap']
 
     return data_file, cor_colormap
+
+
+def file_reader(path):
+    """
+    Read contents of Comma Separated Values (CSV) files
+
+    Parameters
+    ----------
+    path: str
+        Path to file
+
+    Returns
+    -------
+    data: list
+        List of dictionaries containing the contents of dataset stored in
+        `path`. This has the form
+        [
+            {col1: val1, col2: val1},
+            {col1: val2, col2: val2}
+            ...
+        ]
+    """
+    with open(path) as f:
+        data = [{k: int(v) for k, v in row.items()}
+                for row in csv.DictReader(f, skipinitialspace=True)]
+    return data
 
 
 def correlation_matrix(
