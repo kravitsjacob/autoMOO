@@ -15,7 +15,6 @@ import argparse
 import configparser
 import plotly.express as px
 import plotly.graph_objs as go
-import sys
 
 
 def input_parser():
@@ -29,6 +28,7 @@ def input_parser():
     cor_colormap : str
         string that dictates correlation matrix colors
     """
+    # Parse command line arguments
     my_parser = argparse.ArgumentParser()
 
     my_parser.add_argument(
@@ -41,11 +41,10 @@ def input_parser():
         required=False
     )
 
+    # Parse config file contents
     config_inputs = my_parser.parse_args()
-
     if config_inputs.config is None:
         raise TypeError('Please include config file to create dashboard')
-        sys.exit(1)
     elif config_inputs.config is not None:
         my_config = configparser.ConfigParser()
         my_config.read(config_inputs.config)
@@ -53,23 +52,19 @@ def input_parser():
             raise TypeError(
                 'Missing data file path. Please add this to your config file'
             )
-            sys.exit(1)
         if my_config['FILES']['input'] is None:
             raise TypeError(
                 'Missing data file path. Please add this to your config file'
             )
-            sys.exit(1)
         elif my_config['PREFERENCES']['correlation_colormap'] is None:
             raise TypeError(
                 'Missing correlation colormap. Please add this to your config'
                 ' file'
             )
-            sys.exit(1)
         else:
             data_file = my_config['FILES']['input']
             cor_colormap = my_config['PREFERENCES']['correlation_colormap']
-
-    return data_file, cor_colormap
+            return data_file, cor_colormap
 
 
 def file_reader(path):
