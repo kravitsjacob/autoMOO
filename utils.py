@@ -112,10 +112,12 @@ def correlation_matrix(
     """
     This function creates correlation matrices.
 
+    TODO this function is still parsing datatypes
+
     Parameters
     ----------
-    data : dataframe
-        dataframe that holds csv data
+    data: list
+        List of dictionaries containing the contents of dataset
     colormap: list
         List of plotly colormap
 
@@ -127,7 +129,7 @@ def correlation_matrix(
         Plotly figure of column correlations
     """
     # Creates correlation matrix
-    corr_mat = data.corr()
+    corr_mat = pd.DataFrame(data).corr()
 
     # Creates numpy array of correlations
     correlations = corr_mat.to_numpy()
@@ -144,6 +146,10 @@ def correlation_matrix(
             xgap=1
         )
     )
+
+    # Convert to base
+    correlations = correlations.tolist()
+
     return correlations, correlation_visual
 
 
@@ -233,7 +239,14 @@ def create_dashboard(
     app: Dash
         AutoMOO dashboard
     """
+    # Initialize app
     app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+
+    # Correlation matrix
+    cors, cor_fig = correlation_matrix(
+        data=data,
+        colormap=getattr(px.colors.diverging, cor_colormap)
+    )
 
     app.layout = dbc.Container(
         [
@@ -296,8 +309,7 @@ def create_dashboard(
                 id='memory',
                 data={
                     'data': data,
-                    'group_values': group_values,
-                    'cor_matrix': cor_matrix
+                    'cors': cors,
                 }
             )
         ]
