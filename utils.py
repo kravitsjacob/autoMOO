@@ -179,10 +179,15 @@ def group_columns(
         Updated `group_labels_with_columns` based on `cor_threshold`. Keys are
         each group and contents are a list of columns in that group
     """
-    group_labels_with_columns = {'Group 1': []}  # initialize empty dictionary
-    data_grouped = {}  # initialize empty array
+    # Initialization
     group_label = 0
     val = -1
+    init_group = 'Group 1'
+    group_labels_with_columns = {init_group: []}  # initialize empty dictionary
+    data_grouped = []
+    for row in data:
+         data_grouped.append({init_group: []})
+
     col_list = list(data[0].keys())  # create list of column labels
     for col in col_list:
         val = val + 1  # iterable value for correlation check
@@ -201,8 +206,9 @@ def group_columns(
             group_labels_with_columns[group_name] = [col]
 
             # Add column data to grouped data
-            group_data = [row[list(row.keys())[0]] for row in data]
-            data_grouped[group_name] = group_data
+            group_vals = [row[list(row.keys())[val]] for row in data]
+            for i, group_val in enumerate(group_vals):
+                data_grouped[i][group_name] = group_val
 
             # Remaining column labels
             for leftover in range(val+1, len(col_list), 1):
