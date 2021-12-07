@@ -10,7 +10,7 @@ import utils
 
 class AnalysisLib(unittest.TestCase):
 
-    def test_data_import(self):
+    def test_file_reader_import(self):
         # Setup
         test_file = open('test.txt', 'w')
         test_file.write('A, B, C \n 1, 2, 3 \n 1, 2, 3')
