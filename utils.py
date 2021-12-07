@@ -220,6 +220,30 @@ def group_columns(
     return data_grouped, group_labels_with_columns
 
 
+def create_parallel(data):
+    """
+    Create hiplot interactive parallel plot and return as html
+
+    Parameters
+    ----------
+    data: list
+        List of dictionaries containing the contents of dataset
+
+    Returns
+    -------
+    srcdoc: str
+        String of html file
+    """
+    # Create plot
+    exp = hip.Experiment.from_iterable(data)
+    exp.display_data(hip.Displays.PARALLEL_PLOT).update({'hide': ['uid']})
+    exp.display_data(hip.Displays.TABLE).update({'hide': ['uid', 'from_uid']})
+
+    # Saving plot
+    srcdoc = exp.to_html()  # Store html as string
+    return srcdoc
+
+
 def create_dashboard(
         data,
         cor_colormap,
@@ -360,14 +384,7 @@ def create_dashboard(
         cors = memory_data['cors']
 
         if n_clicks == 0:
-            exp = hip.Experiment.from_iterable(data)
-            exp.display_data(
-                hip.Displays.PARALLEL_PLOT
-            ).update({'hide': ['uid']})
-            exp.display_data(
-                hip.Displays.TABLE
-            ).update({'hide': ['uid', 'from_uid']})
-            srcdoc = exp.to_html()  # Store html as string
+            srcdoc = create_parallel(data)
         else:
             data_grouped, group_labels_with_columns = group_columns(
                 data=data,
@@ -376,14 +393,7 @@ def create_dashboard(
             )
 
             # Update parallel plot
-            exp = hip.Experiment.from_iterable(data_grouped)
-            exp.display_data(
-                hip.Displays.PARALLEL_PLOT
-            ).update({'hide': ['uid']})
-            exp.display_data(
-                hip.Displays.TABLE
-            ).update({'hide': ['uid', 'from_uid']})
-            srcdoc = exp.to_html()  # Store html as string
+            srcdoc = create_parallel(data_grouped)
 
             # Update group table
             group_table_data = []
