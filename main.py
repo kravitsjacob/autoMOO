@@ -1,8 +1,6 @@
 """Example Run Script for autoMOO"""
 
-import pandas as pd
 import utils
-import plotly.express as px
 
 
 def main():
@@ -20,28 +18,7 @@ def main():
         data=data,
         cor_colormap=cor_colormap
     )
-    a = 1
-    # # Reading data csv
-    # df = pd.read_csv(data_file)
-    #
-    # # Creating correlation matrices
-    # cor_matrix, cor_fig = utils.correlation_matrix(
-    #     df,
-    #     getattr(px.colors.diverging, corr_colormap)
-    # )
-    # group_labels_with_columns = dict(
-    #     zip(df.columns.values, df.columns.values)
-    # )  # Assumes each column is a group
-    # group_values = df.to_numpy()
-    #
-    # # Create dashboard
-    # app = utils.create_dashboard(
-    #     group_labels_with_columns,
-    #     group_values,
-    #     cor_matrix,
-    #     cor_fig
-    # )
-    #
+
     # Run dashboard
     app.run_server(debug=True)
 
