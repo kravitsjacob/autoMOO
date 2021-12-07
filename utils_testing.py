@@ -50,43 +50,36 @@ class AnalysisLib(unittest.TestCase):
 
     def test_column_grouping_all_grouping(self):
         # Setup
-        df_test = pd.DataFrame(
-            {
-                'A': [0, 1, 2],
-                'B': [0, 1, 2],
-                'C': [0, 1, 2]
-            }
-        )
-        cor_matrix, cor_matrix_visual = utils.correlation_matrix(df_test, None)
-        data = df_test.to_numpy()
-        column_labels = dict(
-            zip(df_test.columns.values, df_test.columns.values)
-        )
+        data = [
+            {'A': 0, 'B': 0, 'C': 0},
+            {'A': 1, 'B': 1, 'C': 1},
+            {'A': 2, 'B': 2, 'C': 2}
+        ]
+
+        cors, _ = utils.correlation_matrix(data, None)
         cor_threshold = 0.5
 
         # Run
-        group_labels_with_columns, group_values = utils.group_columns(
-            column_labels,
-            data,
-            cor_threshold,
-            cor_matrix
+        data_grouped, group_labels_with_columns = utils.group_columns(
+            data=data,
+            cors=cors,
+            cor_threshold=cor_threshold,
         )
 
         # Test
         group_labels_with_columns_expect = {'Group 1': ['A', 'B', 'C']}
-        group_values_expect = [[0, 1, 2]]
-        group_values_modified = [cols.tolist() for cols in group_values]
+        data_grouped_expect = {'Group 1': [0, 1, 2]}
 
         self.assertEqual(
             group_labels_with_columns,
             group_labels_with_columns_expect
         )
 
-        for i in range(len(group_values_modified)):
-            self.assertEqual(
-                group_values_modified,
-                group_values_expect
-            )
+        self.assertEqual(
+            data_grouped,
+            data_grouped_expect
+        )
+
 
     def test_column_grouping_no_grouping(self):
         # Setup
