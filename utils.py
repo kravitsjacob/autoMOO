@@ -34,11 +34,39 @@ def input_parser():
         action='store',
         help="This is the config file that" +
         " stores the preferences and paths",
-        required=True
+        required=False
     )
 
     config_inputs = my_parser.parse_args()
-    return config_inputs
+
+    if config_inputs.config is None:
+        raise TypeError('Please include config file to create dashboard')
+        #sys.exit(1)
+    elif config_inputs.config is not None:
+        my_config = configparser.ConfigParser()
+        my_config.read(config_inputs.config)
+        if my_config['FILES']['input'] is None:
+            raise TypeError(
+                'Missing data file path. Please add this to your config file'
+            )
+            sys.exit(1)
+        if my_config['FILES']['input'] is None:
+            raise TypeError(
+                'Missing data file path. Please add this to your config file'
+            )
+            sys.exit(1)
+        elif my_config['PREFERENCES']['correlation_colormap'] is None:
+            raise TypeError(
+                'Missing correlation colormap. Please add this to your config'
+                ' file'
+            )
+            sys.exit(1)
+        else:
+            data_file = my_config['FILES']['input']
+            correlation_colormap = \
+                my_config['PREFERENCES']['correlation_colormap']
+
+    return data_file, correlation_colormap
 
 
 def config_parser(arguments):
