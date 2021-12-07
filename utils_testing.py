@@ -13,7 +13,7 @@ class AnalysisLib(unittest.TestCase):
     def test_file_reader_import(self):
         # Setup
         test_file = open('test.txt', 'w')
-        test_file.write('A, B, C \n 1, 2, 3 \n 1, 2, 3')
+        test_file.write("A,B,C\n1,0.1,'1'\n 2,0.2,'2'\n3,0.3,'3'")
         test_file.close()
 
         # Run
@@ -21,7 +21,11 @@ class AnalysisLib(unittest.TestCase):
         os.remove('test.txt')
 
         # Test
-        expect = [{'A': 1, 'B': 2, 'C ': 3}, {'A': 1, 'B': 2, 'C ': 3}]
+        expect = [
+            {'A': 1, 'B': 0.1, 'C': '1'},
+            {'A': 2, 'B': 0.2, 'C': '2'},
+            {'A': 3, 'B': 0.3, 'C': '3'}
+        ]
         self.assertEqual(expect, result)
 
     def test_create_dashboard_default(self):
