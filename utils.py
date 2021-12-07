@@ -154,39 +154,37 @@ def correlation_matrix(
 
 
 def group_columns(
-        column_labels,
-        data,
-        cor_threshold,
-        cor_matrix
+    data,
+    cors,
+    cor_threshold
 ):
     """
     Grouping columns
 
     Parameters
     ----------
-    column_labels: dict
-        Dictionary with keys of group labels and values of corresponding
-        column labels
-    data: ndarray
-        Numpy array with each column being the values for each group
+    data: list
+        List of dictionaries containing the contents of dataset
+    cors: list
+        List of lists containing column correlations
     cor_threshold: float
             Current correlation threshold selected by the user
-    cor_matrix: ndarray
-        Numpy arrary of column correlations
 
     Returns
     -------
+    data_grouped: dict
+        List of dictionaries containing the grouped dataset based on
+        `cor_threshold`
     group_labels_with_columns: dict
-        Updated `group_labels_with_columns` based on `cor_threshold`
-    group_values: ndarray
-        Updated `group_values` based on `cor_threshold`
+        Updated `group_labels_with_columns` based on `cor_threshold`. Keys are
+        each group and contents are a list of columns in that group
     """
     group_labels_with_columns = {'Group 1': []}  # initialize empty dictionary
-    group_values = []  # initialize empty array
+    data_grouped = {}  # initialize empty array
     group_label = 0
     val = -1
-    col_list = list(column_labels.keys())  # create list of column labels
-    for name in column_labels:
+    col_list = list(data[0].keys())  # create list of column labels
+    for col in col_list:
         val = val + 1  # iterable value for correlation check
 
         # List currently grouped columns
@@ -194,25 +192,31 @@ def group_columns(
             {x for v in group_labels_with_columns.values() for x in v}
         )
 
-        # if group label not included in grouped columns already
-        if name not in group_cols:
+        # If group label not included in grouped columns already
+        if col not in group_cols:
             group_label = group_label + 1
             group_name = 'Group ' + str(group_label)
-            # store previous label in new group
-            group_labels_with_columns[group_name] = [name]
-            # add column data to grouped data
-            group_values.append(data[:, val])
-            # remaining column labels
+
+            # Store previous label in new group
+            group_labels_with_columns[group_name] = [col]
+
+            # Add column data to grouped data
+            group_data = [row[list(row.keys())[0]] for row in data]
+            data_grouped[group_name] = group_data
+
+            # Remaining column labels
             for leftover in range(val+1, len(col_list), 1):
-                # pull correlation value
-                correlation_val = cor_matrix[val, leftover]
+                # Pull correlation value
+                correlation_val = cors[val][leftover]
+
                 if correlation_val > cor_threshold:  # if higher than threshold
                     stor = col_list[leftover]  # get name of column
                     # store name of column in group
                     group_labels_with_columns[group_name].append(stor)
                 else:
                     pass
-    return group_labels_with_columns, group_values
+
+    return data_grouped, group_labels_with_columns
 
 
 def create_dashboard(
@@ -365,10 +369,9 @@ def create_dashboard(
             srcdoc = exp.to_html()  # Store html as string
         else:
             new_group_labels_with_columns, new_group_values = group_columns(
-                old_group_labels_with_columns,
-                old_group_values,
-                cor_threshold,
-                cor_matrix
+                data=data,
+                cors=cors,
+                cor_threshold=cor_threshold,
             )
 
             # Update parallel plot
