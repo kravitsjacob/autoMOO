@@ -10,10 +10,7 @@ def main():
     This is the main function which run all other functions
     """
     # Pulling in arguments through input parser
-    args = utils.input_parser()
-
-    # Pulling information from config file
-    data_file, corr_colormap = utils.config_parser(args)
+    data_file, cor_colormap = utils.input_parser()
 
     # Reading data csv
     df = pd.read_csv(data_file)
