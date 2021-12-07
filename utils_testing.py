@@ -1,5 +1,6 @@
 """Testing library for utils.py"""
 
+import os
 import unittest
 import pandas as pd
 import plotly.graph_objects as go
@@ -8,6 +9,20 @@ import utils
 
 
 class AnalysisLib(unittest.TestCase):
+
+    def test_data_import(self):
+        # Setup
+        test_file = open('test.txt', 'w')
+        test_file.write('A, B, C \n 1, 2, 3 \n 1, 2, 3')
+        test_file.close()
+
+        # Run
+        result = utils.file_reader('test.txt')
+        os.remove('test.txt')
+
+        # Test
+        expect = [{'A': 1, 'B': 2, 'C ': 3}, {'A': 1, 'B': 2, 'C ': 3}]
+        self.assertEqual(expect, result)
 
     def test_create_dashboard_default(self):
         """
