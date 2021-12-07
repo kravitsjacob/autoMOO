@@ -76,6 +76,10 @@ def file_reader(path):
     """
     Read contents of Comma Separated Values (CSV) files
 
+    TODO it is faster to guess the datatypes initially instead of for every
+    row with the underlying assumption is that each column will have a
+    consistent datatype
+
     Parameters
     ----------
     path: str
@@ -206,25 +210,23 @@ def group_columns(
 
 
 def create_dashboard(
-        group_labels_with_columns,
-        group_values,
-        cor_matrix,
-        cor_fig
+        data,
+        cor_colormap,
 ):
     """
     Create dash app
 
     Parameters
     ----------
-    group_labels_with_columns: dict
-        Dictionary with keys of group labels and values of corresponding
-        column lables
-    group_values: ndarray
-        Numpy array with each column being the values for each group
-    cor_matrix: ndarray
-        Numpy array of column correlations
-    cor_fig: plotly.graph_objs._figure.Figure
-        Plotly figure of column correlations
+    data: list
+        List of dictionaries containing the contents of dataset. Has form:
+        [
+            {col1: val1, col2: val1},
+            {col1: val2, col2: val2}
+            ...
+        ]
+    cor_colormap: str
+        Plotly diverging colormap
 
     Returns
     -------
@@ -293,7 +295,7 @@ def create_dashboard(
             dcc.Store(
                 id='memory',
                 data={
-                    'group_labels_with_columns': group_labels_with_columns,
+                    'data': data,
                     'group_values': group_values,
                     'cor_matrix': cor_matrix
                 }
