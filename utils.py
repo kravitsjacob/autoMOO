@@ -186,7 +186,7 @@ def group_columns(
     group_labels_with_columns = {init_group: []}  # initialize empty dictionary
     data_grouped = []
     for row in data:
-         data_grouped.append({init_group: []})
+        data_grouped.append({init_group: []})
 
     col_list = list(data[0].keys())  # create list of column labels
     for col in col_list:
@@ -333,14 +333,14 @@ def create_dashboard(
         State('group_table', 'data'),
         State('memory', 'data'),
     )
-    def update_parallel(
+    def update_dashboard(
             n_clicks,
             cor_threshold,
             group_table_data,
             memory_data
     ):
         """
-        Update parallel axis plots
+        Update parallel axis plots and group table
 
         Parameters
         ----------
@@ -374,16 +374,14 @@ def create_dashboard(
             ).update({'hide': ['uid', 'from_uid']})
             srcdoc = exp.to_html()  # Store html as string
         else:
-            new_group_labels_with_columns, new_group_values = group_columns(
+            data_grouped, group_labels_with_columns = group_columns(
                 data=data,
                 cors=cors,
                 cor_threshold=cor_threshold,
             )
 
             # Update parallel plot
-            df = pd.DataFrame(new_group_values).T
-            df.columns = new_group_labels_with_columns.keys()
-            exp = hip.Experiment.from_dataframe(df)
+            exp = hip.Experiment.from_iterable(data_grouped)
             exp.display_data(
                 hip.Displays.PARALLEL_PLOT
             ).update({'hide': ['uid']})
@@ -394,7 +392,7 @@ def create_dashboard(
 
             # Update group table
             group_table_data = []
-            for key, value in new_group_labels_with_columns.items():
+            for key, value in group_labels_with_columns.items():
                 group_table_data.append(
                     {'Group': key, 'Columns': ', '.join(value)}
                 )
