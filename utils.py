@@ -1,6 +1,7 @@
 """autoMOO Utilities"""
 
 import csv
+import ast
 import numpy as np
 import pandas as pd
 import dash
@@ -91,9 +92,12 @@ def file_reader(path):
             ...
         ]
     """
-    with open(path) as f:
-        data = [{k: int(v) for k, v in row.items()}
-                for row in csv.DictReader(f, skipinitialspace=True)]
+    with open(path, 'r') as read_obj:
+        data = []
+        dict_reader = csv.DictReader(read_obj, skipinitialspace=True)
+        for row in dict_reader:
+            data.append({k: ast.literal_eval(v) for k, v in row.items()})
+
     return data
 
 
