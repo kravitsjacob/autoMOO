@@ -18,12 +18,14 @@ import sys
 
 def input_parser():
     """
-    This function parses the command line arguments.
+    This function parses the command line arguments and config file
 
     Returns
     -------
-    config_inputs : list
-       The function return is list of parsed arguments.
+    data_file: str
+        Data file pulled from config file
+    cor_colormap : str
+        string that dictates correlation matrix colors
     """
     my_parser = argparse.ArgumentParser()
 
@@ -41,7 +43,7 @@ def input_parser():
 
     if config_inputs.config is None:
         raise TypeError('Please include config file to create dashboard')
-        #sys.exit(1)
+        sys.exit(1)
     elif config_inputs.config is not None:
         my_config = configparser.ConfigParser()
         my_config.read(config_inputs.config)
@@ -63,58 +65,9 @@ def input_parser():
             sys.exit(1)
         else:
             data_file = my_config['FILES']['input']
-            correlation_colormap = \
-                my_config['PREFERENCES']['correlation_colormap']
+            cor_colormap = my_config['PREFERENCES']['correlation_colormap']
 
-    return data_file, correlation_colormap
-
-
-def config_parser(arguments):
-    """
-    This function parses the config file.
-
-    Parameters
-    ----------
-    arguments: list
-        This is a config file from the argument line
-
-    Returns
-    -------
-    data_file: str
-        Data file pulled from config file
-    correlation_colormap : str
-        string that dictates correlation matrix colors
-    dashboard preferences TBD : str, int etc
-        TBD
-    """
-    # checking config file
-    if arguments.config is None:
-        raise TypeError('Please include config file to create dashboard')
-        sys.exit(1)
-    elif arguments.config is not None:
-        my_config = configparser.ConfigParser()
-        my_config.read(arguments.config)
-        if my_config['FILES']['input'] is None:
-            raise TypeError(
-                'Missing data file path. Please add this to your config file'
-            )
-            sys.exit(1)
-        if my_config['FILES']['input'] is None:
-            raise TypeError(
-                'Missing data file path. Please add this to your config file'
-            )
-            sys.exit(1)
-        elif my_config['PREFERENCES']['correlation_colormap'] is None:
-            raise TypeError(
-                'Missing correlation colormap. Please add this to your config'
-                ' file'
-            )
-            sys.exit(1)
-        else:
-            data_file = my_config['FILES']['input']
-            correlation_colormap = \
-                my_config['PREFERENCES']['correlation_colormap']
-    return data_file, correlation_colormap
+    return data_file, cor_colormap
 
 
 def correlation_matrix(
