@@ -180,7 +180,7 @@ def group_columns(
     init_group = 'Group 1'
     group_labels_with_columns = {init_group: []}  # initialize empty dictionary
     data_grouped = []
-    for row in data:
+    for _ in data:
         data_grouped.append({init_group: []})
 
     col_list = list(data[0].keys())  # create list of column labels
