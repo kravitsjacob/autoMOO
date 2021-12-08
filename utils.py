@@ -107,8 +107,6 @@ def correlation_matrix(
     """
     This function creates correlation matrices.
 
-    TODO this function is still parsing datatypes
-
     Parameters
     ----------
     data: list
@@ -123,27 +121,34 @@ def correlation_matrix(
     correlation_visual: plotly.graph_objs._figure.Figure
         Plotly figure of column correlations
     """
-    # Creates correlation matrix
-    corr_mat = pd.DataFrame(data).corr()
+    # Initialize vars
+    correlations = []
 
-    # Creates numpy array of correlations
-    correlations = corr_mat.to_numpy()
+    # Get column information
+    num_cols = len(data[0])
+
+    # Column correlation information
+    for i in range(num_cols):
+        col_cors = []
+        for j in range(num_cols):
+            x = [row[list(row.keys())[i]] for row in data]
+            y = [row[list(row.keys())[j]] for row in data]
+            cor = np.corrcoef(x, y)[0][1]
+            col_cors.append(cor)
+        correlations.append(col_cors)
 
     # Creates a heatmap visualization that can be used by researcher
     correlation_visual = go.Figure(
         go.Heatmap(
-            z=corr_mat.values,
-            x=corr_mat.index.values,
-            y=corr_mat.columns.values,
+            z=correlations,
+            x=list(data[0].keys()),
+            y=list(data[0].keys()),
             colorscale=colormap,
             showscale=True,
             ygap=1,
             xgap=1
         )
     )
-
-    # Convert to base
-    correlations = correlations.tolist()
 
     return correlations, correlation_visual
 
