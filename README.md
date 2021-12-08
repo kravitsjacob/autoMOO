@@ -9,7 +9,7 @@ This tutorial assumes the use of [gitbash](https://git-scm.com/downloads) or a U
 3. Clone the repository using `$git clone https://github.com/janeBrusilovsky/autoMOO.git` 
 4. Change to the current working directory using `$cd <insert_path>/autoMOO`
 5. Change `input` in `config.ini` to match the dataset you prefer to analyze.
-6. Run the analysis by running `$bash run.sh`
+6. Create dashboard by running `$bash run.sh`
 ## Native Python
 AutoMOO can also be incorporated directly into Python workflows for example:
 ```
