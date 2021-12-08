@@ -260,8 +260,8 @@ def create_dashboard(
     data: list
         List of dictionaries containing the contents of dataset. Has form:
         [
-            {col1: val1, col2: val1},
-            {col1: val2, col2: val2}
+            {col1: val1, col2: val1 ...},
+            {col1: val2, col2: val2 ...}
             ...
         ]
     cor_colormap: str
