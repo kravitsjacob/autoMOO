@@ -8,6 +8,7 @@ dependencies:
   - dash-bootstrap-components
   - dash-table
   - hiplot
+  - plotly
   - numpy
 
 prefix: C:\Users\kravi\.conda\envs\autoMOO
