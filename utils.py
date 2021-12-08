@@ -2,18 +2,18 @@
 
 import csv
 import ast
-import numpy as np
+import argparse
+import configparser
 import dash
 from dash import html
 from dash import dcc
 from dash import dash_table
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
-import hiplot as hip
-import argparse
-import configparser
 import plotly.express as px
 import plotly.graph_objs as go
+import numpy as np
+import hiplot as hip
 
 
 def input_parser():
