@@ -6,9 +6,7 @@ dependencies:
   - python=3.9
   - dash
   - dash-bootstrap-components
-  - dash-table
+  - pandas
   - hiplot
-  - plotly
-  - numpy
 
 prefix: C:\Users\kravi\.conda\envs\autoMOO
