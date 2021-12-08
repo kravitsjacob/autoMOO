@@ -100,7 +100,7 @@ def file_reader(path):
 
 
 def correlation_matrix(
-        data,
+        data: list,
         colormap=px.colors.diverging.RdBu
 ):
     """
@@ -153,8 +153,8 @@ def correlation_matrix(
 
 
 def group_columns(
-    data,
-    cors,
+    data: list,
+    cors: list,
     cor_threshold
 ):
     """
