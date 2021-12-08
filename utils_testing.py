@@ -2,8 +2,6 @@
 
 import os
 import unittest
-import pandas as pd
-import plotly.graph_objects as go
 
 import utils
 
@@ -48,6 +46,9 @@ class AnalysisLib(unittest.TestCase):
         )
 
     def test_column_grouping_all_grouping(self):
+        """
+        Test where all columns are grouped
+        """
         # Setup
         data = [
             {'A': 0, 'B': 0, 'C': 0},
@@ -71,18 +72,19 @@ class AnalysisLib(unittest.TestCase):
             {'Group 1': 1},
             {'Group 1': 2}
         ]
-
         self.assertEqual(
             group_labels_with_columns,
             group_labels_with_columns_expect
         )
-
         self.assertEqual(
             data_grouped,
             data_grouped_expect
         )
 
     def test_column_grouping_no_grouping(self):
+        """
+        Test where no columns are grouped
+        """
         # Setup
         data = [
             {'A': 0, 'B': 2, 'C': 1},
@@ -110,18 +112,19 @@ class AnalysisLib(unittest.TestCase):
             {'Group 1': 1, 'Group 2': 1, 'Group 3': 1},
             {'Group 1': 2, 'Group 2': 0, 'Group 3': 2}
         ]
-
         self.assertEqual(
             group_labels_with_columns,
             group_labels_with_columns_expect
         )
-
         self.assertEqual(
             data_grouped,
             data_grouped_expect
         )
 
     def test_column_grouping_basic_grouping(self):
+        """
+        Test where some columns are grouped
+        """
         # Setup
         data = [
             {'A': 0, 'B': 0.0, 'C': 2, 'D': 1.5},
