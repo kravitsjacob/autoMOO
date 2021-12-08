@@ -3,7 +3,6 @@
 import csv
 import ast
 import numpy as np
-import pandas as pd
 import dash
 from dash import html
 from dash import dcc
