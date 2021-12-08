@@ -13,7 +13,7 @@ def main():
     # Importing data
     data = utils.file_reader(data_file)
 
-    # Create Dashboard
+    # Create dashboard
     app = utils.create_dashboard(
         data=data,
         cor_colormap=cor_colormap
