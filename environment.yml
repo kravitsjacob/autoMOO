@@ -5,9 +5,8 @@ channels:
 dependencies:
   - python=3.9
   - dash
-  - hiplot
-  - pandas
-  - pycodestyle
   - dash-bootstrap-components
-  - dash-table
+  - pandas
+  - hiplot
+
 prefix: C:\Users\kravi\.conda\envs\autoMOO
